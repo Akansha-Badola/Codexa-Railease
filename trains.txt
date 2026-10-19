@@ -1,0 +1,10 @@
+12001 Shatabdi Delhi Dehradun 20-10-2026 100 100
+12002 VandeBharat Delhi Mumbai 26-1002026 150 150
+12003 Rajdhani Bengaluru Chandigarh 30-10-2026 125 125
+12004 DehradunExpress Dehradun Pune 01-11-2026 123 123
+12005 DurontoExpress Delhi mumbai 30-11-2026 124 124
+12006 LuxuryTrain Rajasthan Gujarat 12-12-2026 45 45
+12007 MountainRailways Dehradun Shimla 14-12-2026 165 165
+12008 SuperFastExpress Haridwar Kotdwar 16-12-2026 68 68
+12009 TejasExpress Mumbai Ahmedabad 09-11-2026 108 108
+12010 KeralaExpress Delhi Thiruvananthapuram 08-11-2026 87 87
