@@ -1,42 +1,51 @@
-RAILEASE – Railway Simulation System
+# RAILEASE – Railway Simulation System
 
-1. Project Overview
+## 1. Project Overview
+
 RAILEASE is a console-based Railway Simulation System developed using C++. It aims to simplify railway record management by organizing train, coach, passenger, reservation, waiting list, and staff information.
 
-2. Problem Statement
+## 2. Problem Statement
+
 Managing railway information manually can be time-consuming and difficult to organize. RAILEASE provides a menu-driven system to manage railway records and perform basic operations through a console interface.
 
-3. Solution
+## 3. Solution
+
 The system allows users to manage railway records through different modules. It supports adding, searching, displaying, updating, and deleting records where implemented. File handling is used to store and retrieve supported data.
 
-4. Features
-1. Train Management:Add, search, display, update, and manage train information, including train number, name, source, destination, journey date, departure time, arrival time, and fare.
-2. Coach Management: Add, search, display, update, and delete coach details, including coach number, coach type, total seats, and available seats.
-3. Passenger Management: Maintain passenger records.
-4. Reservation and Cancellation: Manage reservation records.
-5. Waiting List and Safety Alerts:Organize waiting-list information and alerts.
-6. Staff Management:Manage staff records.
-7. File Handling and Reports:Save and load supported records and generate reports.
+## 4. Features
 
- 5. Technologies Used
-Programming Language: C++
-Concepts:Object-Oriented Programming (OOP), Data Structures, and File Handling
-Interface:Console-based menu system
+1. **Train Management:** Add, search, display, update, and manage train information, including train number, name, source, destination, journey date, departure time, arrival time, and fare.
+2. **Coach Management:** Add, search, display, update, and delete coach details, including coach number, coach type, total seats, and available seats.
+3. **Passenger Management:** Maintain passenger records.
+4. **Reservation and Cancellation:** Manage reservation records.
+5. **Waiting List and Safety Alerts:** Organize waiting-list information and alerts.
+6. **Staff Management:** Manage staff records.
+7. **File Handling and Reports:** Save and load supported records and generate reports.
 
- 6. Project Structure
+## 5. Technologies Used
+
+- **Programming Language:** C++
+- **Concepts:** Object-Oriented Programming (OOP), Data Structures, and File Handling
+- **Interface:** Console-based menu system
+
+## 6. Project Structure
+
 The project contains C++ source files (`.cpp`), header files (`.h`), and data files used for storing project records.
 
-7. How to Run
+## 7. How to Run
+
 1. Download or clone this repository.
 2. Open the project in a C++ IDE or compiler.
 3. Compile the required source files together.
 4. Run the generated executable.
 5. Follow the menu options displayed in the console.
 
- 8. Team Information
-Team Name:Codexa
+## 8. Team Information
 
-Team Members:
+**Team Name:** Codexa
+
+**Team Members:**
+
 1. Binita Singha
 2. Suhana Joshi
 3. Akanksha Negi
