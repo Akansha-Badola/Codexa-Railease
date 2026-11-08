@@ -8,6 +8,7 @@ Coach::Coach() {
     availableSeats = 0;
     coachType = "";
 }
+
 Coach::Coach(int number, int trainNo, string type, int seats) {
     coachNumber = number;
     trainNumber = trainNo;
@@ -52,7 +53,6 @@ void loadCoaches(vector<Coach>& coaches) {
     file.close();
 }
 
-
 void coachMenu(vector<Train>& trains, vector<Coach>& coaches) {
     int choice, number, seats;
     string type;
@@ -64,67 +64,74 @@ void coachMenu(vector<Train>& trains, vector<Coach>& coaches) {
         cout << "2. Search Coach\n";
         cout << "3. Update Available Seats\n";
         cout << "4. Display All Coaches\n";
-        cout << "5. Back to Main Menu\n";
+        cout << "5. Delete Coach\n";
+        cout << "6. Back to Main Menu\n";
         cout << "Enter your choice: ";
         cin >> choice;
 
         switch (choice) {
 
-case 1: {
-    int trainNo;
-    bool trainFound = false;
+            case 1: {
+                int trainNo;
+                bool trainFound = false;
 
-    cout << "Enter coach number: ";
-    cin >> number;
+                cout << "Enter coach number: ";
+                cin >> number;
 
-    cout << "Enter train number this coach belongs to: ";
-    cin >> trainNo;
+                cout << "Enter train number this coach belongs to: ";
+                cin >> trainNo;
 
-    found = false;
+                found = false;
 
-    for (int i = 0; i < coaches.size(); i++) {
-        if (coaches[i].coachNumber == number &&
-            coaches[i].trainNumber == trainNo) {
-            found = true;
-            break;
-        }
-    }
+                for (int i = 0; i < coaches.size(); i++) {
+                    if (coaches[i].coachNumber == number &&
+                        coaches[i].trainNumber == trainNo) {
+                        found = true;
+                        break;
+                    }
+                }
 
-    if (found) {
-        cout << "This coach number already exists for this train.\n";
-        break;
-    }
+                if (found) {
+                    cout << "This coach number already exists for this train.\n";
+                    break;
+                }
 
-    for (int i = 0; i < trains.size(); i++) {
-        if (trains[i].trainNumber == trainNo) {
-            trainFound = true;
-            break;
-        }
-    }
+                for (int i = 0; i < trains.size(); i++) {
+                    if (trains[i].trainNumber == trainNo) {
+                        trainFound = true;
+                        break;
+                    }
+                }
 
-    if (!trainFound) {
-        cout << "Train not found. Add the train first.\n";
-        break;
-    }
+                if (!trainFound) {
+                    cout << "Train not found. Add the train first.\n";
+                    break;
+                }
 
-    cout << "Enter coach type (Sleeper/AC3/AC2/AC1): ";
-    cin >> type;
+                cout << "Enter coach type (Sleeper/AC3/AC2/AC1): ";
+                cin >> type;
 
-    cout << "Enter total seats: ";
-    cin >> seats;
+                if (type != "Sleeper" && type != "AC3" &&
+                    type != "AC2" && type != "AC1") {
+                    cout << "Invalid coach type!\n";
+                    cout << "Please enter Sleeper, AC1, AC2 or AC3.\n";
+                    break;
+                }
 
-    if (seats <= 0) {
-        cout << "Seats must be greater than zero.\n";
-        break;
-    }
+                cout << "Enter total seats: ";
+                cin >> seats;
 
-    coaches.push_back(Coach(number, trainNo, type, seats));
-    saveCoaches(coaches);
+                if (seats <= 0) {
+                    cout << "Seats must be greater than zero.\n";
+                    break;
+                }
 
-    cout << "Coach added successfully.\n";
-    break;
-}
+                coaches.push_back(Coach(number, trainNo, type, seats));
+                saveCoaches(coaches);
 
+                cout << "Coach added successfully.\n";
+                break;
+            }
 
             case 2:
                 cout << "Enter coach number to search: ";
@@ -161,8 +168,8 @@ case 1: {
                             cout << "Invalid seat count.\n";
                         } else {
                             coaches[i].availableSeats = seats;
-                        saveCoaches(coaches);
-                        cout << "Seats updated successfully.\n";
+                            saveCoaches(coaches);
+                            cout << "Seats updated successfully.\n";
                         }
 
                         found = true;
@@ -185,6 +192,28 @@ case 1: {
                 break;
 
             case 5:
+                cout << "Enter coach number to delete: ";
+                cin >> number;
+
+                found = false;
+
+                for (int i = 0; i < coaches.size(); i++) {
+                    if (coaches[i].coachNumber == number) {
+                        coaches.erase(coaches.begin() + i);
+                        saveCoaches(coaches);
+
+                        cout << "Coach deleted successfully.\n";
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    cout << "Coach not found.\n";
+                }
+                break;
+
+            case 6:
                 cout << "Returning to main menu...\n";
                 break;
 
@@ -192,5 +221,5 @@ case 1: {
                 cout << "Invalid choice. Try again.\n";
         }
 
-    } while (choice != 5);
+    } while (choice != 6);
 }

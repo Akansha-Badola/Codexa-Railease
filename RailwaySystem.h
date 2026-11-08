@@ -1,3 +1,4 @@
+
 #ifndef RAILWAY_SYSTEM_H
 #define RAILWAY_SYSTEM_H
 
@@ -14,10 +15,15 @@ class Train {
 public:
     int trainNumber, totalSeats, availableSeats;
     string trainName, source, destination, date;
+    string departureTime, arrivalTime;
+    double fare;
 
     Train();
+
     Train(int number, string name, string src, string dest,
-          string journeyDate, int seats);
+          string journeyDate, int seats, double fare,
+          string departure, string arrival);
+
     void display() const;
 };
 
@@ -36,6 +42,7 @@ public:
     Coach(int number, int trainNo, string type, int seats);
     void display() const;
 };
+
 
 // ==================== PASSENGER ====================
 
@@ -69,6 +76,7 @@ public:
     void display() const;
 };
 
+
 // ==================== RESERVATION ====================
 
 class Reservation {
@@ -91,7 +99,6 @@ struct ReservationNode {
     ReservationNode(const Reservation& reservation);
 };
 
-
 class ReservationList {
 private:
     ReservationNode* head;
@@ -103,6 +110,7 @@ public:
     Reservation* search(int pnr);
     void display() const;
 };
+
 
 // ==================== WAITING LIST ====================
 
@@ -128,6 +136,7 @@ public:
     bool dequeue();
     void display() const;
 };
+
 
 // ==================== SAFETY ALERT ====================
 
@@ -162,6 +171,8 @@ public:
     SafetyAlert* search(int alertId);
     void display() const;
 };
+
+
 // ==================== STAFF ====================
 
 class Staff {
@@ -194,13 +205,14 @@ public:
     void display() const;
 };
 
+
 // ==================== FILE HANDLER ====================
 
 class FileHandler {
 public:
     // Original team declarations kept unchanged
-    static void saveTrains(Train trains[], int count);
-    static void loadTrains(Train trains[], int& count);
+    static void saveTrains(Train* trains[], int count);
+    static void loadTrains(Train* trains[], int*& count);
 
     static void savePassengers(const PassengerList& passengers);
     static void saveReservations(const ReservationList& reservations);
@@ -208,6 +220,7 @@ public:
     static void saveAlerts(const AlertList& alerts);
     static void saveStaff(const StaffList& staff);
 };
+
 
 // ==================== REPORTS ====================
 
@@ -218,16 +231,17 @@ public:
     static void passengerReport();
 };
 
+
 // ==================== MENU FUNCTIONS ====================
 
 // Original team train menu declaration kept for compatibility
-void trainMenu(Train trains[], int& count);
+void trainMenu(Train* trains[], int*& count);
 
 // Your vector-based Train and Coach menus
 void trainMenu(vector<Train>& trains, vector<Coach>& coaches);
 void coachMenu(vector<Train>& trains, vector<Coach>& coaches);
 
-// Your vector-based file functions (separate from FileHandler)
+// Your vector-based file functions
 void loadTrains(vector<Train>& trains);
 void saveTrains(const vector<Train>& trains);
 void loadCoaches(vector<Coach>& coaches);
@@ -238,7 +252,7 @@ void passengerMenu(PassengerList& passengers);
 
 // Reservation Management
 void reservationMenu(ReservationList& reservations,
-                     Train trains[], int trainCount);
+                     Train* trains[], int trainCount);
 
 // Waiting List and Safety Alerts
 void waitingSafetyMenu(WaitingList& waiting,
@@ -248,4 +262,3 @@ void waitingSafetyMenu(WaitingList& waiting,
 void staffMenu(StaffList& staff);
 
 #endif
-
