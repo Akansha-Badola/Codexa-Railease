@@ -1,15 +1,15 @@
 RAILEASE – Railway Simulation System
 
-Project Overview
+1.Project Overview
 RAILEASE is a console-based Railway Simulation System developed using C++. It aims to simplify railway record management by organizing train, coach, passenger, reservation, waiting list, and staff information.
 
-Problem Statement
+2.Problem Statement
 Managing railway information manually can be time-consuming and difficult to organize. RAILEASE provides a menu-driven system to manage railway records and perform basic operations through a console interface.
 
-Solution
+3.Solution
 The system allows users to manage railway records through different modules. It supports adding, searching, displaying, updating, and deleting records where implemented. File handling is used to store and retrieve supported data.
 
-Features
+4.Features
 1.Train Management: Add, search, display, update, and manage train information, including train number, name, source, destination, journey date, departure time, arrival time, and fare.
 
 2.Coach Management: Add, search, display, update, and delete coach details, including coach number, coach type, total seats, and available seats.
@@ -24,22 +24,22 @@ Features
 
 7.File Handling and Reports: Save and load supported records and generate reports.
 
-Technologies Used
+5.Technologies Used
 Programming Language: C++
 Concepts: Object-Oriented Programming (OOP), Data Structures, and File Handling
 Interface: Console-based menu system
 
-Project Structure
+6.Project Structure
 The project contains C++ source files (.cpp), header files (.h), and data files used for storing project records.
 
-How to Run
+7.How to Run
 Download or clone this repository.
 Open the project in a C++ IDE or compiler.
 Compile the required source files together.
 Run the generated executable.
 Follow the menu options displayed in the console.
 
-Team Information
+8.Team Information
 Team Name: Codexa
 Team Members:
 Binita Singha
