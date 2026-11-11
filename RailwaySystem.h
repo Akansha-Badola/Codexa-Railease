@@ -86,7 +86,7 @@ public:
     double fare;
 
     Reservation();
-    Reservation(int pnrNumber, int pId, int trainNo,
+    Reservation(int pId, int trainNo,
                 string coachName, int berthNo,
                 double ticketFare, string ticketStatus);
     void display() const;
