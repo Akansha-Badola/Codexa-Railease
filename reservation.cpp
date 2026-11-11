@@ -1,220 +1,223 @@
-#include "RailwaySystem.h"
-#include "RailwaySystem.h"
 
-int generatePNR(ReservationList& reservations) {
-    static int nextPNR = 100001;
+#ifndef RAILWAY_SYSTEM_H
+#define RAILWAY_SYSTEM_H
 
-    while (reservations.search(nextPNR) != 0) {
-        nextPNR++;
-    }
+#include <iostream>
+#include <string>
+#include <fstream>
 
-    return nextPNR++;
-}
-Reservation::Reservation() {
-    pnr = 0;
-    passengerId = 0;
-    trainNumber = 0;
-    berth = 0;
-    fare = 0;
-}
+using namespace std;
 
-Reservation::Reservation( int pId, int trainNo,
-                         string coachName, int berthNo,
-                         double ticketFare, string ticketStatus) {
-    passengerId = pId;
-    trainNumber = trainNo;
-    coach = coachName;
-    berth = berthNo;
-    fare = ticketFare;
-    status = ticketStatus;
-}
+// ==================== TRAIN ====================
 
-void Reservation::display() const {
-    cout << "\nPNR: " << pnr
-         << "\nPassenger ID: " << passengerId
-         << "\nTrain No: " << trainNumber
-         << "\nCoach: " << coach
-         << "\nBerth: " << berth
-         << "\nFare: " << fare
-         << "\nStatus: " << status << "\n";
-}
+class Train {
+public:
+    int trainNumber, totalSeats, availableSeats;
+    string trainName, source, destination, date;
 
-ReservationNode::ReservationNode(const Reservation& reservation) {
-    data = reservation;
-    next = 0;
-}
+    Train();
+    Train(int number, string name, string src, string dest,
+          string journeyDate, int seats);
+    void display() const;
+};
 
-ReservationList::ReservationList() {
-    head = 0;
-}
+// ==================== PASSENGER ====================
 
-void ReservationList::insert(const Reservation& reservation) {
-    ReservationNode* node = new ReservationNode(reservation);
-    node->next = head;
-    head = node;
-}
+class Passenger {
+public:
+    int passengerId, age;
+    string name, phone;
 
-bool ReservationList::remove(int pnr) {
-    ReservationNode* current = head;
-    ReservationNode* previous = 0;
+    Passenger();
+    Passenger(int id, string passengerName, int passengerAge,
+              string passengerPhone);
+    void display() const;
+};
 
-    while (current != 0) {
-        if (current->data.pnr == pnr) {
-            if (previous == 0)
-                head = current->next;
-            else
-                previous->next = current->next;
+struct PassengerNode {
+    Passenger data;
+    PassengerNode* next;
 
-            delete current;
-            return true;
-        }
+    PassengerNode(const Passenger& passenger);
+};
 
-        previous = current;
-        current = current->next;
-    }
+class PassengerList {
+private:
+    PassengerNode* head;
 
-    return false;
-}
+public:
+    PassengerList();
+    void insert(const Passenger& passenger);
+    bool remove(int passengerId);
+    Passenger* search(int passengerId);
+    void display() const;
+};
 
-Reservation* ReservationList::search(int pnr) {
-    ReservationNode* current = head;
+// ==================== RESERVATION ====================
 
-    while (current != 0) {
-        if (current->data.pnr == pnr)
-            return &current->data;
+class Reservation {
+public:
+    int pnr, passengerId, trainNumber, berth;
+    string coach, status;
+    double fare;
 
-        current = current->next;
-    }
+    Reservation();
+    Reservation( int pId, int trainNo,
+                string coachName, int berthNo,
+                double ticketFare, string ticketStatus);
+    void display() const;
+};
 
-    return 0;
-}
+struct ReservationNode {
+    Reservation data;
+    ReservationNode* next;
 
-void ReservationList::display() const {
-    ReservationNode* current = head;
+    ReservationNode(const Reservation& reservation);
+};
 
-    while (current != 0) {
-        current->data.display();
-        current = current->next;
-    }
-}
+class ReservationList {
+private:
+    ReservationNode* head;
 
-void reservationMenu(ReservationList& reservations, Train trains[], int trainCount) {
-    int choice;
+public:
+    ReservationList();
+    void insert(const Reservation& reservation);
+    bool remove(int pnr);
+    Reservation* search(int pnr);
+    void display() const;
+};
 
-    do {
-        cout << "\n--- RESERVATION & CANCELLATION ---\n";
-        cout << "1. Book Ticket\n";
-        cout << "2. Cancel Ticket\n";
-        cout << "3. Search PNR\n";
-        cout << "4. Display Reservations\n";
-        cout << "0. Back\n";
+// ==================== WAITING LIST ====================
 
-        cin >> choice;
+class WaitingNode {
+public:
+    int passengerId, trainNumber;
+    string name, coachPreference;
+    WaitingNode* next;
 
-        if (choice == 1) {
-            int pnr, passengerId, trainNo, berth;
-            string coach;
-            double fare;
-            bool found = false;
+    WaitingNode(int pId, int trainNo,
+                string passengerName, string coach);
+};
 
-            cout << "Passenger ID: ";
-            cin >> passengerId;
+class WaitingList {
+private:
+    WaitingNode* front;
+    WaitingNode* rear;
 
-            cout << "Train number: ";
-            cin >> trainNo;
+public:
+    WaitingList();
 
-            for (int i = 0; i < trainCount; i++) {
-                if (trains[i].trainNumber == trainNo) {
-                    found = true;
+    void enqueue(int passengerId, int trainNumber,
+                 string name, string coach);
 
-                    if (trains[i].availableSeats <= 0) {
-                        cout << "No seats available.\n";
-                        break;
-                    }
+    bool dequeue();
+    void display() const;
+};
 
-                    cout << "Coach: ";
-                    cin >> coach;
+// ==================== SAFETY ALERT ====================
 
-                    cout << "Berth number: ";
-                    cin >> berth;
+class SafetyAlert {
+public:
+    int alertId, pnr, trainNumber, berth;
+    string coach, type, description, status;
 
-                    cout << "Fare: ";
-                    cin >> fare;
+    SafetyAlert();
 
-                    reservations.insert(
-                        Reservation( passengerId, trainNo,
-                                    coach, berth, fare, "CONFIRMED")
-                    );
-                    int pnr = generatePNR(reservations);
+    SafetyAlert(int id, int pnrNumber, int trainNo,
+                string coachName, int berthNo,
+                string alertType, string message,
+                string alertStatus);
 
-                    Reservation newReservation(
-                        passengerId,
-                        trainNo,
-                        coach,
-                        berth,
-                        fare,
-                        "CONFIRMED"
-                    );
+    void display() const;
+};
 
-                    newReservation.pnr = pnr;
+struct AlertNode {
+    SafetyAlert data;
+    AlertNode* next;
 
-                    reservations.insert(newReservation);
+    AlertNode(const SafetyAlert& alert);
+};
 
-                    cout << "\nTicket booked successfully!\n";
-                    cout << "Your PNR is: " << pnr << "\n";
-                    trains[i].availableSeats--;
+class AlertList {
+private:
+    AlertNode* head;
 
-                    cout << "Ticket booked.\n";
-                    break;
-                }
-            }
+public:
+    AlertList();
 
-            if (!found)
-                cout << "Train not found.\n";
-        }
+    void insert(const SafetyAlert& alert);
+    bool updateStatus(int alertId, string newStatus);
+    SafetyAlert* search(int alertId);
+    void display() const;
+};
 
-        else if (choice == 2) {
-            int pnr;
+// ==================== STAFF ====================
 
-            cout << "PNR: ";
-            cin >> pnr;
+class Staff {
+public:
+    int staffId;
+    string name, role, phone;
 
-            Reservation* r = reservations.search(pnr);
+    Staff();
+    Staff(int id, string staffName,
+          string staffRole, string staffPhone);
+    void display() const;
+};
 
-            if (r != 0) {
-                for (int i = 0; i < trainCount; i++) {
-                    if (trains[i].trainNumber == r->trainNumber) {
-                        trains[i].availableSeats++;
-                        break;
-                    }
-                }
+struct StaffNode {
+    Staff data;
+    StaffNode* next;
 
-                reservations.remove(pnr);
+    StaffNode(const Staff& staff);
+};
 
-                cout << "Reservation cancelled.\n";
-            }
-            else {
-                cout << "PNR not found.\n";
-            }
-        }
+class StaffList {
+private:
+    StaffNode* head;
 
-        else if (choice == 3) {
-            int pnr;
+public:
+    StaffList();
+    void insert(const Staff& staff);
+    bool remove(int staffId);
+    Staff* search(int staffId);
+    void display() const;
+};
 
-            cout << "PNR: ";
-            cin >> pnr;
+// ==================== FILE HANDLER ====================
 
-            Reservation* r = reservations.search(pnr);
+class FileHandler {
+public:
+    static void saveTrains(Train trains[], int count);
+    static void loadTrains(Train trains[], int& count);
 
-            if (r != 0)
-                r->display();
-            else
-                cout << "PNR not found.\n";
-        }
+    static void savePassengers(const PassengerList& passengers);
+    static void saveReservations(const ReservationList& reservations);
+    static void saveWaitingList(const WaitingList& waitingList);
+    static void saveAlerts(const AlertList& alerts);
+    static void saveStaff(const StaffList& staff);
+};
 
-        else if (choice == 4) {
-            reservations.display();
-        }
+// ==================== REPORTS ====================
 
-    } while (choice != 0);
-}
+class Reports {
+public:
+    static void bookingReport();
+    static void safetyReport();
+    static void passengerReport();
+};
+
+// ==================== MENU FUNCTIONS ====================
+
+void trainMenu(Train trains[], int& count);
+
+void passengerMenu(PassengerList& passengers);
+
+void reservationMenu(ReservationList& reservations,
+                     Train trains[], int trainCount);
+
+void waitingSafetyMenu(WaitingList& waiting,
+                       AlertList& alerts);
+
+void staffMenu(StaffList& staff);
+
+#endif
