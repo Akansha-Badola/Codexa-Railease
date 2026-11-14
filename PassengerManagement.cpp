@@ -1,15 +1,15 @@
 #include "RailwaySystem.h"
+#include <limits>
 
-// Default constructor
 Passenger::Passenger()
 {
     passengerId = 0;
     age = 0;
+    name = "";
+    phone = "";
 }
 
-// Parameterized constructor
-Passenger::Passenger(int id, string passengerName, int passengerAge,
-                     string passengerPhone)
+Passenger::Passenger(int id, string passengerName, int passengerAge, string passengerPhone)
 {
     passengerId = id;
     name = passengerName;
@@ -17,262 +17,262 @@ Passenger::Passenger(int id, string passengerName, int passengerAge,
     phone = passengerPhone;
 }
 
-// Display passenger details
 void Passenger::display() const
 {
+    cout << "\n-----------------------------";
     cout << "\nPassenger ID: " << passengerId;
     cout << "\nName: " << name;
     cout << "\nAge: " << age;
-    cout << "\nPhone: " << phone << endl;
+    cout << "\nPhone: " << phone;
+    cout << "\n-----------------------------\n";
 }
 
-// Passenger node constructor
-PassengerNode::PassengerNode(const Passenger& passenger)
+PassengerNode::PassengerNode(const Passenger& p)
 {
-    data = passenger;
-    next = 0;
+    data = p;
+    next = nullptr;
 }
 
-// Passenger list constructor
 PassengerList::PassengerList()
 {
-    head = 0;
+    head = nullptr;
 }
 
-// Add passenger
-void PassengerList::insert(const Passenger& passenger)
+void PassengerList::insert(const Passenger& p)
 {
-    PassengerNode* newNode = new PassengerNode(passenger);
+    PassengerNode* newNode = new PassengerNode(p);
 
-    newNode->next = head;
-    head = newNode;
-}
-
-// Search passenger
-Passenger* PassengerList::search(int passengerId)
-{
-    PassengerNode* current = head;
-
-    while (current != 0)
+    if (head == nullptr)
     {
-        if (current->data.passengerId == passengerId)
+        head = newNode;
+    }
+    else
+    {
+        PassengerNode* temp = head;
+
+        while (temp->next != nullptr)
         {
-            return &current->data;
+            temp = temp->next;
         }
 
-        current = current->next;
+        temp->next = newNode;
     }
 
-    return 0;
+    cout << "\nPassenger added successfully!\n";
 }
 
-// Delete passenger
-bool PassengerList::remove(int passengerId)
+Passenger* PassengerList::search(int id)
 {
-    PassengerNode* current = head;
-    PassengerNode* previous = 0;
+    PassengerNode* temp = head;
 
-    while (current != 0)
+    while (temp != nullptr)
     {
-        if (current->data.passengerId == passengerId)
+        if (temp->data.passengerId == id)
         {
-            if (previous == 0)
+            return &temp->data;
+        }
+
+        temp = temp->next;
+    }
+
+    return nullptr;
+}
+
+bool PassengerList::remove(int id)
+{
+    PassengerNode* temp = head;
+    PassengerNode* prev = nullptr;
+
+    while (temp != nullptr)
+    {
+        if (temp->data.passengerId == id)
+        {
+            if (prev == nullptr)
             {
-                head = current->next;
+                head = temp->next;
             }
             else
             {
-                previous->next = current->next;
+                prev->next = temp->next;
             }
 
-            delete current;
+            delete temp;
             return true;
         }
 
-        previous = current;
-        current = current->next;
+        prev = temp;
+        temp = temp->next;
     }
 
     return false;
 }
 
-// Display all passengers
 void PassengerList::display() const
 {
-    PassengerNode* current = head;
-
-    if (current == 0)
+    if (head == nullptr)
     {
-        cout << "\nNo passenger records found.\n";
+        cout << "\nNo passenger records found!\n";
         return;
     }
 
-    cout << "\n========== PASSENGER RECORDS ==========\n";
+    PassengerNode* temp = head;
 
-    while (current != 0)
+    while (temp != nullptr)
     {
-        current->data.display();
-        current = current->next;
+        temp->data.display();
+        temp = temp->next;
     }
 }
 
-// Passenger management menu
 void passengerMenu(PassengerList& passengers)
 {
-    int choice;
+    int choice, id, age;
+    string name, phone;
 
     do
     {
-        cout << "\n====================================\n";
-        cout << "        PASSENGER MANAGEMENT\n";
-        cout << "====================================\n";
-        cout << "1. Add Passenger\n";
-        cout << "2. Search Passenger\n";
-        cout << "3. Update Passenger Details\n";
-        cout << "4. Delete Passenger\n";
-        cout << "5. Display All Passengers\n";
-        cout << "0. Back to Main Menu\n";
-        cout << "====================================\n";
+        cout << "\n================================";
+        cout << "\n      PASSENGER MANAGEMENT";
+        cout << "\n================================";
+        cout << "\n1. Add Passenger";
+        cout << "\n2. Display All Passengers";
+        cout << "\n3. Search Passenger";
+        cout << "\n4. Update Passenger Details";
+        cout << "\n5. Delete Passenger";
+        cout << "\n6. Back to Main Menu";
+        cout << "\n================================";
+        cout << "\nEnter your choice: ";
 
-        cout << "Enter your choice: ";
-        cin >> choice;
+        if (!(cin >> choice))
+        {
+            cout << "\nInvalid input!\n";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            continue;
+        }
 
         switch (choice)
         {
-            // Add Passenger
             case 1:
             {
-                int id, age;
-                string name, phone;
-
                 cout << "\nEnter Passenger ID: ";
                 cin >> id;
 
-                if (passengers.search(id) != 0)
+                if (id <= 0 || passengers.search(id) != nullptr)
                 {
-                    cout << "\nPassenger ID already exists.\n";
+                    cout << "\nInvalid or duplicate ID!\n";
                     break;
                 }
 
-                cout << "Enter Name: ";
-                cin >> name;
+                cout << "Enter Passenger Name: ";
+                getline(cin >> ws, name);
 
                 cout << "Enter Age: ";
                 cin >> age;
 
-                cout << "Enter Phone Number: ";
-                cin >> phone;
-
-                if (age <= 0)
+                if (age <= 0 || age > 120)
                 {
-                    cout << "\nInvalid age.\n";
+                    cout << "\nInvalid age!\n";
                     break;
                 }
 
-                passengers.insert(Passenger(id, name, age, phone));
+                cout << "Enter Phone Number: ";
+                cin >> phone;
 
-                cout << "\nPassenger added successfully.\n";
+                Passenger p(id, name, age, phone);
+                passengers.insert(p);
+
                 break;
             }
 
-            // Search Passenger
             case 2:
-            {
-                int id;
-
-                cout << "\nEnter Passenger ID: ";
-                cin >> id;
-
-                Passenger* p = passengers.search(id);
-
-                if (p != 0)
-                {
-                    cout << "\nPassenger record found:\n";
-                    p->display();
-                }
-                else
-                {
-                    cout << "\nPassenger not found.\n";
-                }
-
-                break;
-            }
-
-            // Update Passenger
-            case 3:
-            {
-                int id;
-
-                cout << "\nEnter Passenger ID to update: ";
-                cin >> id;
-
-                Passenger* p = passengers.search(id);
-
-                if (p != 0)
-                {
-                    cout << "\nCurrent Passenger Details:\n";
-                    p->display();
-
-                    cout << "\nEnter New Name: ";
-                    cin >> p->name;
-
-                    cout << "Enter New Age: ";
-                    cin >> p->age;
-
-                    cout << "Enter New Phone Number: ";
-                    cin >> p->phone;
-
-                    if (p->age <= 0)
-                    {
-                        cout << "\nInvalid age. Please correct the record.\n";
-                    }
-                    else
-                    {
-                        cout << "\nPassenger details updated successfully.\n";
-                    }
-                }
-                else
-                {
-                    cout << "\nPassenger not found.\n";
-                }
-
-                break;
-            }
-
-            // Delete Passenger
-            case 4:
-            {
-                int id;
-
-                cout << "\nEnter Passenger ID to delete: ";
-                cin >> id;
-
-                if (passengers.remove(id))
-                {
-                    cout << "\nPassenger deleted successfully.\n";
-                }
-                else
-                {
-                    cout << "\nPassenger not found.\n";
-                }
-
-                break;
-            }
-
-            // Display All Passengers
-            case 5:
             {
                 passengers.display();
                 break;
             }
 
-            case 0:
+            case 3:
+            {
+                cout << "\nEnter Passenger ID: ";
+                cin >> id;
+
+                Passenger* p = passengers.search(id);
+
+                if (p != nullptr)
+                {
+                    cout << "\nPassenger found!";
+                    p->display();
+                }
+                else
+                {
+                    cout << "\nPassenger not found!\n";
+                }
+
+                break;
+            }
+
+            case 4:
+            {
+                cout << "\nEnter Passenger ID: ";
+                cin >> id;
+
+                Passenger* p = passengers.search(id);
+
+                if (p != nullptr)
+                {
+                    cout << "Enter New Name: ";
+                    getline(cin >> ws, p->name);
+
+                    cout << "Enter New Age: ";
+                    cin >> p->age;
+
+                    if (p->age <= 0 || p->age > 120)
+                    {
+                        cout << "\nInvalid age!\n";
+                        break;
+                    }
+
+                    cout << "Enter New Phone Number: ";
+                    cin >> p->phone;
+
+                    cout << "\nPassenger details updated successfully!\n";
+                }
+                else
+                {
+                    cout << "\nPassenger not found!\n";
+                }
+
+                break;
+            }
+
+            case 5:
+            {
+                cout << "\nEnter Passenger ID to delete: ";
+                cin >> id;
+
+                if (passengers.remove(id))
+                {
+                    cout << "\nPassenger deleted successfully!\n";
+                }
+                else
+                {
+                    cout << "\nPassenger not found!\n";
+                }
+
+                break;
+            }
+
+            case 6:
+            {
                 cout << "\nReturning to Main Menu...\n";
                 break;
+            }
 
             default:
-                cout << "\nInvalid choice. Please try again.\n";
+            {
+                cout << "\nPlease enter a valid choice!\n";
+            }
         }
 
-    } while (choice != 0);
+    } while (choice != 6);
 }
