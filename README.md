@@ -1,4 +1,4 @@
-# RAILEASE – Railway Simulation System 🚆
+# RAILEASE – Railway Simulation System 
 
 ## 1. Project Overview
 
