@@ -151,6 +151,7 @@ Train::Train() {
 
     departureTime = "NotSet";
     arrivalTime = "NotSet";
+    status = "On Time";
 }
 
 Train::Train(int number, string name, string src, string dest,
@@ -170,6 +171,7 @@ Train::Train(int number, string name, string src, string dest,
 
     departureTime = departure;
     arrivalTime = arrival;
+    status = "On Time";
 }
 
 // ==================== DISPLAY TRAIN ====================
@@ -190,7 +192,8 @@ void Train::display() const {
 
     cout << "\nTotal Seats: " << totalSeats;
     cout << "\nAvailable Seats: " << availableSeats;
-    cout << "\nTrain Fare: Rs. " << fare << "\n";
+    cout << "\nTrain Fare: Rs. " << fare;
+    cout << "\nTrain Status: " << status << "\n";
 }
 
 // ==================== SAVE TRAINS ====================
@@ -210,7 +213,8 @@ void saveTrains(const vector<Train>& trains) {
              << trains[i].availableSeats << " "
              << trains[i].fare << " "
              << trains[i].departureTime << " "
-             << trains[i].arrivalTime << "\n";
+             << trains[i].arrivalTime << " "
+             << (trains[i].status == "On Time" ? "On_Time" : trains[i].status) << "\n";
     }
 
     file.close();
@@ -245,11 +249,33 @@ void loadTrains(vector<Train>& trains) {
                 t.arrivalTime = "NotSet";
             }
 
+            string storedStatus;
+            if (ss >> storedStatus) {
+                if (storedStatus == "On_Time")
+                    t.status = "On Time";
+                else
+                    t.status = storedStatus;
+            }
+            else {
+                t.status = "On Time";
+            }
+
             trains.push_back(t);
         }
     }
 
     file.close();
+}
+
+// ==================== NORMALIZE STATION NAME ====================
+
+string normalizeStation(string station) {
+
+    for (int i = 0; i < station.length(); i++) {
+        station[i] = tolower(static_cast<unsigned char>(station[i]));
+    }
+
+    return station;
 }
 
 // ==================== TRAIN MENU ====================
@@ -274,7 +300,9 @@ void trainMenu(vector<Train>& trains, vector<Coach>& coaches) {
         cout << "4. Display All Trains\n";
         cout << "5. Delete Train\n";
         cout << "6. Update Train Schedule\n";
-        cout << "7. Back to Main Menu\n";
+        cout << "7. Update Train Status\n";
+        cout << "8. Search Train by Source and Destination\n";
+        cout << "9. Back to Main Menu\n";
 
         cout << "Enter your choice: ";
         cin >> choice;
@@ -467,6 +495,7 @@ void trainMenu(vector<Train>& trains, vector<Coach>& coaches) {
                              << trains[i].availableSeats << "\n";
 
                         cout << "Train Fare   : Rs. " << trains[i].fare << "\n";
+                        cout << "Train Status : " << trains[i].status << "\n";
 
                         cout << "\nCOACH DETAILS\n";
                         cout << "---------------------------------------------\n";
@@ -595,7 +624,99 @@ void trainMenu(vector<Train>& trains, vector<Coach>& coaches) {
 
                 break;
 
+            // UPDATE TRAIN STATUS
+
             case 7:
+
+                cout << "Enter train number: ";
+                cin >> number;
+
+                found = false;
+
+                for (int i = 0; i < trains.size(); i++) {
+
+                    if (trains[i].trainNumber == number) {
+
+                        int statusChoice;
+
+                        cout << "\nCurrent Train Status: " << trains[i].status << "\n";
+                        cout << "\nSelect New Train Status\n";
+                        cout << "1. On Time\n";
+                        cout << "2. Delayed\n";
+                        cout << "3. Cancelled\n";
+                        cout << "4. Departed\n";
+                        cout << "5. Arrived\n";
+                        cout << "Enter your choice: ";
+                        cin >> statusChoice;
+
+                        switch (statusChoice) {
+                            case 1:
+                                trains[i].status = "On Time";
+                                break;
+                            case 2:
+                                trains[i].status = "Delayed";
+                                break;
+                            case 3:
+                                trains[i].status = "Cancelled";
+                                break;
+                            case 4:
+                                trains[i].status = "Departed";
+                                break;
+                            case 5:
+                                trains[i].status = "Arrived";
+                                break;
+                            default:
+                                cout << "Invalid status choice.\n";
+                                found = true;
+                                break;
+                        }
+
+                        if (statusChoice >= 1 && statusChoice <= 5) {
+                            saveTrains(trains);
+                            cout << "Train status updated successfully.\n";
+                        }
+
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                    cout << "Train not found.\n";
+
+                break;
+
+            // SEARCH TRAIN BY SOURCE AND DESTINATION
+
+            case 8: {
+
+                string searchSource, searchDestination;
+                bool trainFound = false;
+
+                cout << "Enter source station: ";
+                cin >> searchSource;
+
+                cout << "Enter destination station: ";
+                cin >> searchDestination;
+
+                for (int i = 0; i < trains.size(); i++) {
+
+                    if (normalizeStation(trains[i].source) == normalizeStation(searchSource) &&
+                        normalizeStation(trains[i].destination) == normalizeStation(searchDestination)) {
+
+                        trains[i].display();
+                        trainFound = true;
+                    }
+                }
+
+                if (!trainFound) {
+                    cout << "No trains found for this route.\n";
+                }
+
+                break;
+            }
+
+            case 9:
 
                 cout << "Returning to main menu...\n";
 
@@ -606,5 +727,5 @@ void trainMenu(vector<Train>& trains, vector<Coach>& coaches) {
                 cout << "Invalid choice. Try again.\n";
         }
 
-    } while (choice != 7);
+    } while (choice != 9);
 }
