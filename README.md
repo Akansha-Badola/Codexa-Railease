@@ -143,4 +143,4 @@ RAILEASE has been developed as a functional academic railway simulation project.
 ---
 
 **Developed by Team Codexa**  
-*RAILEASE – Organizing Railway Operations Through C++*
+*RAILEASE – Organizing Railway Operations Through C++ and Data Structures*
