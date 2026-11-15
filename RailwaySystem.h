@@ -16,6 +16,7 @@ public:
     int trainNumber, totalSeats, availableSeats;
     string trainName, source, destination, date;
     string departureTime, arrivalTime;
+    string status;
     double fare;
 
     Train();
@@ -37,9 +38,12 @@ public:
     int totalSeats;
     int availableSeats;
     string coachType;
+    string maintenanceStatus;
 
     Coach();
+
     Coach(int number, int trainNo, string type, int seats);
+
     void display() const;
 };
 
@@ -52,8 +56,10 @@ public:
     string name, phone;
 
     Passenger();
+
     Passenger(int id, string passengerName, int passengerAge,
               string passengerPhone);
+
     void display() const;
 };
 
@@ -70,6 +76,7 @@ private:
 
 public:
     PassengerList();
+
     void insert(const Passenger& passenger);
     bool remove(int passengerId);
     Passenger* search(int passengerId);
@@ -86,9 +93,11 @@ public:
     double fare;
 
     Reservation();
-    Reservation(int pId, int trainNo,
+
+    Reservation(int pnrNumber, int pId, int trainNo,
                 string coachName, int berthNo,
                 double ticketFare, string ticketStatus);
+
     void display() const;
 };
 
@@ -102,12 +111,15 @@ struct ReservationNode {
 class ReservationList {
 private:
     ReservationNode* head;
+    friend class FileHandler;
 
 public:
     ReservationList();
+
     void insert(const Reservation& reservation);
     bool remove(int pnr);
     Reservation* search(int pnr);
+    bool isBerthBooked(int trainNo, string coachName, int berthNo) const;
     void display() const;
 };
 
@@ -131,8 +143,10 @@ private:
 
 public:
     WaitingList();
+
     void enqueue(int passengerId, int trainNumber,
                  string name, string coach);
+
     bool dequeue();
     void display() const;
 };
@@ -146,10 +160,12 @@ public:
     string coach, type, description, status;
 
     SafetyAlert();
+
     SafetyAlert(int id, int pnrNumber, int trainNo,
                 string coachName, int berthNo,
                 string alertType, string message,
                 string alertStatus);
+
     void display() const;
 };
 
@@ -166,6 +182,7 @@ private:
 
 public:
     AlertList();
+
     void insert(const SafetyAlert& alert);
     bool updateStatus(int alertId, string newStatus);
     SafetyAlert* search(int alertId);
@@ -181,8 +198,10 @@ public:
     string name, role, phone;
 
     Staff();
+
     Staff(int id, string staffName,
           string staffRole, string staffPhone);
+
     void display() const;
 };
 
@@ -196,9 +215,11 @@ struct StaffNode {
 class StaffList {
 private:
     StaffNode* head;
+    friend class FileHandler;
 
 public:
     StaffList();
+
     void insert(const Staff& staff);
     bool remove(int staffId);
     Staff* search(int staffId);
@@ -211,11 +232,13 @@ public:
 class FileHandler {
 public:
     // Original team declarations kept unchanged
+
     static void saveTrains(Train* trains[], int count);
     static void loadTrains(Train* trains[], int*& count);
 
     static void savePassengers(const PassengerList& passengers);
     static void saveReservations(const ReservationList& reservations);
+    static void loadReservations(ReservationList& reservations);
     static void saveWaitingList(const WaitingList& waitingList);
     static void saveAlerts(const AlertList& alerts);
     static void saveStaff(const StaffList& staff);
@@ -235,30 +258,52 @@ public:
 // ==================== MENU FUNCTIONS ====================
 
 // Original team train menu declaration kept for compatibility
+
 void trainMenu(Train* trains[], int*& count);
 
 // Your vector-based Train and Coach menus
+
 void trainMenu(vector<Train>& trains, vector<Coach>& coaches);
+
 void coachMenu(vector<Train>& trains, vector<Coach>& coaches);
 
+
 // Your vector-based file functions
+
 void loadTrains(vector<Train>& trains);
 void saveTrains(const vector<Train>& trains);
+
 void loadCoaches(vector<Coach>& coaches);
 void saveCoaches(const vector<Coach>& coaches);
 
+
 // Passenger Management
+
 void passengerMenu(PassengerList& passengers);
 
+
 // Reservation Management
+
 void reservationMenu(ReservationList& reservations,
                      Train* trains[], int trainCount);
 
+void loadReservations(ReservationList& reservations);
+
+
 // Waiting List and Safety Alerts
+
 void waitingSafetyMenu(WaitingList& waiting,
                        AlertList& alerts);
 
+
 // Staff Management
+
 void staffMenu(StaffList& staff);
 
+
 #endif
+
+// Integrated module menus
+void reservationMenu(ReservationList& reservations, vector<Train>& trains, vector<Coach>& coaches);
+void staffMenu(StaffList& staff);
+void waitingSafetyMenu(WaitingList& waiting, AlertList& alerts);
